@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <title>Video Retrieval</title>
+  <link rel="stylesheet" href="index.css">
+</head>
+
+<body>
+<div class="page-container">
+
+  <h1>Video Retrieval System</h1>
+
+  <div class="search-section">
+    <div class="search-bar">
+      <input type="text" id="query1" placeholder="Context 1">
+    </div>
+    <div class="search-bar">
+      <input type="text" id="query2" placeholder="Context 2">
+    </div>
+    <div class="search-bar">
+      <input type="text" id="query3" placeholder="Context 3">
+    </div>
+    <button id="searchBtn" class="main-search-btn">Search</button>
+  </div>
+
+  <div id="menu">
+    <button id="l14Btn" class="mode-btn active">L14</button>
+    <button id="b32Btn" class="mode-btn">B/16</button>
+    <button id="b16Btn" class="mode-btn">L14_IVF</button>
+  </div>
+
+  <div id="results"></div>
+
+</div>
+
+<!-- MODAL NEIGHBOR -->
+<div id="imageModal" class="modal">
+  <span class="close">&times;</span>
+  <div id="neighborGrid"></div>
+</div>
+
+<!-- MODAL SIMILAR -->
+<div id="similarModal" class="modal-similar">
+  <span class="close-similar">&times;</span>
+  <div id="similarGrid"></div>
+</div>
+
+<!-- TEMPLATE -->
+<template id="frame-template">
+  <div class="frame-item">
+    <img src="" alt="">
+    <p class="caption"></p>
+    <div class="frame-buttons">
+      <button class="similar-btn">Find Similar</button>
+      <button class="video-btn">Video</button>
+      <button class="submit-btn">Submit</button>
+    </div>
+  </div>
+</template>
+
+<script src="videoPlayer.js"></script>
+<script src="index.js"></script>
+</body>
+</html>
