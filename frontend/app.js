@@ -1,16 +1,15 @@
 let currentPage = 1;
 let totalPages = 1;
 
-// context state
 let currentContext = [];
 let currentCenterTime = null;
 
 /* =========================
-   SEARCH MODE
+   SEARCH
 ========================= */
+
 async function search(page = 1) {
 
-    // reset context UI
     document.getElementById("backBtn").style.display = "none";
     currentContext = [];
     currentCenterTime = null;
@@ -22,15 +21,12 @@ async function search(page = 1) {
     const endpoint = mode === "clip" ? "search" : mode;
 
     const url =
-        `http://127.0.0.1:5000/${endpoint}` +
-        `?q=${encodeURIComponent(query)}` +
-        `&topk=${topk}` +
-        `&page=${page}`;
+        `http://127.0.0.1:5000/${endpoint}?q=${encodeURIComponent(query)}&topk=${topk}&page=${page}`;
 
     const res = await fetch(url);
     const data = await res.json();
 
-    currentPage = data.page || page;
+    currentPage = data.page || 1;
     totalPages = data.total_pages || 1;
 
     renderResults(data.results || []);
@@ -40,24 +36,32 @@ async function search(page = 1) {
 /* =========================
    PAGINATION
 ========================= */
+
 function updatePagination() {
     document.getElementById("pageInfo").innerText =
         `Page ${currentPage} / ${totalPages}`;
 }
 
 function changePage(step) {
-    const newPage = currentPage + step;
-    if (newPage < 1 || newPage > totalPages) return;
-    search(newPage);
+
+    const next = currentPage + step;
+
+    if (next < 1 || next > totalPages)
+        return;
+
+    search(next);
 }
 
 /* =========================
    RENDER SEARCH RESULTS
 ========================= */
+
 function renderResults(results) {
 
     const gallery = document.getElementById("results");
     gallery.innerHTML = "";
+
+    const mode = document.getElementById("searchMode").value;
 
     if (!results.length) {
         gallery.innerHTML = "<p>No results</p>";
@@ -66,43 +70,79 @@ function renderResults(results) {
 
     results.forEach(item => {
 
+        const card = document.createElement("div");
+        card.className = "result";
+
         const frame = item.frame
             ? `http://127.0.0.1:5000${item.frame}`
             : "";
 
-        const card = document.createElement("div");
-        card.className = "result";
+        if (mode === "audio") {
 
-        card.innerHTML = `
-            <img src="${frame}">
-            <div class="info">
-                <p><b>${item.video || ""}</b></p>
-                <p>⏱ ${item.timestamp ?? ""}</p>
-            </div>
-        `;
+            card.innerHTML = `
+                <div class="info" style="padding:15px">
+                    <p><b>${item.video}</b></p>
+                    <p>⏱ ${item.start.toFixed(2)} - ${item.end.toFixed(2)}</p>
+                    <p>${item.text}</p>
+                </div>
+            `;
 
-        // CLICK → LOAD CONTEXT
-        card.onclick = () => loadContext(item);
+            card.onclick = () => playAudio(item);
+
+        }
+        else {
+
+            card.innerHTML = `
+                <img src="${frame}">
+                <div class="info">
+                    <p><b>${item.video}</b></p>
+                    <p>⏱ ${item.timestamp}</p>
+                </div>
+            `;
+
+            card.onclick = () => {
+
+                jumpToTime(item);
+                loadContext(item);
+
+            };
+        }
 
         gallery.appendChild(card);
+
     });
+
 }
 
 /* =========================
-   LOAD CONTEXT API
+   PLAY AUDIO CLIP
 ========================= */
+
+function playAudio(item) {
+
+    const player = document.getElementById("videoPlayer");
+
+    player.src = `http://127.0.0.1:5000${item.clip_path}`;
+
+    player.load();
+
+    player.play();
+
+}
+
+/* =========================
+   LOAD CONTEXT
+========================= */
+
 async function loadContext(item) {
 
-    if (!item.video || item.timestamp === undefined) return;
+    if (!item.video || item.timestamp === undefined)
+        return;
 
-    // show back button
     document.getElementById("backBtn").style.display = "block";
 
     const url =
-        `http://127.0.0.1:5000/clip/context` +
-        `?video=${encodeURIComponent(item.video)}` +
-        `&timestamp=${item.timestamp}` +
-        `&window=20`;
+        `http://127.0.0.1:5000/clip/context?video=${encodeURIComponent(item.video)}&timestamp=${item.timestamp}&window=20`;
 
     const res = await fetch(url);
     const data = await res.json();
@@ -111,26 +151,21 @@ async function loadContext(item) {
     currentCenterTime = data.center_timestamp;
 
     renderContext(currentContext);
+
 }
 
 /* =========================
-   RENDER CONTEXT VIEW
+   CONTEXT VIEW
 ========================= */
+
 function renderContext(frames) {
 
     const gallery = document.getElementById("results");
     gallery.innerHTML = "";
 
-    if (!frames.length) {
-        gallery.innerHTML = "<p>No context</p>";
-        return;
-    }
-
     frames.forEach(item => {
 
-        const frame = item.frame
-            ? `http://127.0.0.1:5000${item.frame}`
-            : "";
+        const frame = `http://127.0.0.1:5000${item.frame}`;
 
         const isCenter = item.timestamp === currentCenterTime;
 
@@ -138,31 +173,37 @@ function renderContext(frames) {
         card.className = "result";
 
         if (isCenter) {
+
             card.style.border = "2px solid #22c55e";
             card.style.transform = "scale(1.05)";
+
         }
 
         card.innerHTML = `
             <img src="${frame}">
             <div class="info">
-                <p><b>${item.video || ""}</b></p>
+                <p><b>${item.video}</b></p>
                 <p>⏱ ${item.timestamp}</p>
             </div>
         `;
 
-        // click → recenter context
-        card.onclick = () => loadContext({
-            video: item.video,
-            timestamp: item.timestamp
-        });
+        card.onclick = () => {
+
+            jumpToTime(item);
+            loadContext(item);
+
+        };
 
         gallery.appendChild(card);
+
     });
+
 }
 
 /* =========================
-   BACK TO SEARCH MODE
+   BACK
 ========================= */
+
 function backToSearch() {
 
     document.getElementById("backBtn").style.display = "none";
@@ -171,25 +212,25 @@ function backToSearch() {
     currentCenterTime = null;
 
     search(currentPage);
+
 }
 
 /* =========================
-   VIDEO SEEK (optional)
+   PLAY FULL VIDEO
 ========================= */
+
 function jumpToTime(item) {
 
     const player = document.getElementById("videoPlayer");
 
-    const videoPath = (item.video || "").replace(/\\/g, "/");
-    if (!videoPath) return;
-
-    player.src = `http://127.0.0.1:5000/${videoPath}`;
+    player.src = `http://127.0.0.1:5000/data/clips/${item.video}.mp4`;
 
     player.onloadedmetadata = () => {
 
-        const t = item.timestamp ?? 0;
+        player.currentTime = Number(item.timestamp);
 
-        player.currentTime = Number(t);
         player.play();
+
     };
+
 }
