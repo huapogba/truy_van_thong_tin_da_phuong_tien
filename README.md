@@ -6,6 +6,17 @@
 - **OCR Search**: Tìm frame dựa trên văn bản xuất hiện trong hình ảnh.
 - **Audio Search**: Tìm đoạn audio/phụ đề dựa trên nội dung lời nói.
 
+## Home
+
+![Home](images/home.png)
+
+## CLIP Search
+
+![CLIP Search](images/clip_search.png)
+
+## Audio Search
+
+![Audio Search](images/audio_search.png)
 Project gồm backend Flask, frontend HTML/CSS/JavaScript và dữ liệu frame/index đã được xử lý sẵn.
 
 ## Cấu trúc thư mục
