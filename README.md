@@ -8,15 +8,19 @@
 
 ## Home
 
-![Home](images/home.png)
-
 ## CLIP Search
 
-![CLIP Search](images/clip_search.png)
+![CLIP Search](demo/clip_search.png)
+
+
+## OCR Search
+
+![Audio Search](demo/ocr_search.png)
 
 ## Audio Search
 
-![Audio Search](images/audio_search.png)
+![Audio Search](demo/audio_search.png)
+
 Project gồm backend Flask, frontend HTML/CSS/JavaScript và dữ liệu frame/index đã được xử lý sẵn.
 
 ## Cấu trúc thư mục
