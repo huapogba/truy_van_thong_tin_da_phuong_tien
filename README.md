@@ -15,7 +15,7 @@
 
 ## OCR Search
 
-![Audio Search](demo/ocr_search.png)
+![Ocr Search](demo/ocr_search.png)
 
 ## Audio Search
 
