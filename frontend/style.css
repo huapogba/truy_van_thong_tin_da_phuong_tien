@@ -1,0 +1,143 @@
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial;
+}
+
+body{
+    background:#0f172a;
+    color:white;
+}
+
+.app{
+    display:flex;
+    height:100vh;
+}
+
+/* Sidebar */
+.sidebar{
+    width:270px;
+    background:#111827;
+    padding:20px;
+    border-right:1px solid #333;
+}
+
+.sidebar h2{
+    margin-bottom:25px;
+}
+
+.menu-group{
+    margin-bottom:20px;
+}
+
+.menu-group label{
+    display:block;
+    margin-bottom:8px;
+}
+
+.menu-group input,
+.menu-group select{
+    width:100%;
+    padding:10px;
+    border:none;
+    border-radius:8px;
+    background:#1f2937;
+    color:white;
+}
+
+.sidebar button{
+    width:100%;
+    padding:12px;
+    border:none;
+    border-radius:8px;
+    background:#2563eb;
+    color:white;
+    cursor:pointer;
+    font-size:16px;
+}
+
+.sidebar button:hover{
+    background:#1d4ed8;
+}
+
+/* Main */
+.main{
+    flex:1;
+    padding:25px;
+    overflow:auto;
+}
+
+.main h1{
+    margin-bottom:20px;
+}
+
+/* Pagination */
+.pagination{
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    gap:15px;
+    margin-bottom:20px;
+}
+
+.pagination button{
+    padding:8px 15px;
+    border:none;
+    border-radius:6px;
+    background:#334155;
+    color:white;
+    cursor:pointer;
+}
+
+.pagination button:hover{
+    background:#475569;
+}
+
+/* Gallery */
+.gallery{
+    display:grid;
+    grid-template-columns:repeat(6,1fr);
+    gap:15px;
+}
+
+.result{
+    background:#1e293b;
+    border-radius:10px;
+    overflow:hidden;
+    cursor:pointer;
+    transition:.2s;
+}
+
+.result:hover{
+    transform:translateY(-3px);
+}
+
+.result img{
+    width:100%;
+    aspect-ratio:16/9;
+    object-fit:cover;
+}
+
+.info{
+    padding:10px;
+    font-size:13px;
+}
+
+/* Back button */
+#backBtn{
+    padding:8px 12px;
+    background:#ef4444;
+    border:none;
+    color:white;
+    border-radius:6px;
+    cursor:pointer;
+}
+
+.result img.thumb {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+    border-radius: 8px;
+    cursor: pointer;
+}
